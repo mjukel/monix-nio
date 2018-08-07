@@ -47,8 +47,7 @@ abstract class TaskServerSocketChannel {
 
   /** $acceptDesc */
   def accept(): Task[TaskSocketChannel] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
+    Task.create { (scheduler, cb) =>
       asyncServerSocketChannel.accept(new Callback[AsyncSocketChannel] {
         override def onError(ex: Throwable): Unit = cb.onError(ex)
         override def onSuccess(value: AsyncSocketChannel): Unit = cb.onSuccess(

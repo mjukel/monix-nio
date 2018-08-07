@@ -60,8 +60,7 @@ abstract class TaskSocketChannel {
     * @param remote $remoteDesc
     */
   def connect(remote: InetSocketAddress): Task[Unit] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
+    Task.create { (scheduler, cb) =>
       asyncSocketChannel.connect(remote, cb)
     }
 
@@ -84,8 +83,7 @@ abstract class TaskSocketChannel {
     * @return $readReturnDesc
     */
   def read(dst: ByteBuffer, timeout: Option[Duration] = None): Task[Int] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
+    Task.create { (scheduler, cb) =>
       asyncSocketChannel.read(dst, cb, timeout)
     }
 
@@ -98,8 +96,7 @@ abstract class TaskSocketChannel {
     * @return $writeReturnDesc
     */
   def write(src: ByteBuffer, timeout: Option[Duration] = None): Task[Int] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
+    Task.create { (scheduler, cb) =>
       asyncSocketChannel.write(src, cb, timeout)
     }
 

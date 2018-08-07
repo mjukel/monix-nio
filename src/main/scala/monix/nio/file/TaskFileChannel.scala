@@ -81,9 +81,8 @@ abstract class TaskFileChannel {
 
   /** $sizeDesc */
   def size: Task[Long] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
-      asyncFileChannel.size(Callback.async(cb))
+    Task.create { (scheduler, cb) =>
+      asyncFileChannel.size(Callback.trampolined(cb)(scheduler))
     }
 
   /**
@@ -95,9 +94,8 @@ abstract class TaskFileChannel {
     * @return $readReturnDesc
     */
   def read(dst: ByteBuffer, position: Long): Task[Int] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
-      asyncFileChannel.read(dst, position, Callback.async(cb))
+    Task.create { (scheduler, cb) =>
+      asyncFileChannel.read(dst, position, Callback.trampolined(cb)(scheduler))
     }
 
   /**
@@ -109,9 +107,8 @@ abstract class TaskFileChannel {
     * @return $writeReturnDesc
     */
   def write(src: ByteBuffer, position: Long): Task[Int] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
-      asyncFileChannel.write(src, position, Callback.async(cb))
+    Task.create { (scheduler, cb) =>
+      asyncFileChannel.write(src, position, Callback.trampolined(cb)(scheduler))
     }
 
   /**
@@ -120,9 +117,8 @@ abstract class TaskFileChannel {
     * @param writeMetaData $flushWriteMetaDesc
     */
   def flush(writeMetaData: Boolean): Task[Unit] =
-    Task.unsafeCreate { (context, cb) =>
-      implicit val s = context.scheduler
-      asyncFileChannel.flush(writeMetaData, Callback.async(cb))
+    Task.create { (scheduler, cb) =>
+      asyncFileChannel.flush(writeMetaData, Callback.trampolined(cb)(scheduler))
     }
 
   /** $closeDesc */
